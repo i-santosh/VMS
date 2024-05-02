@@ -1,7 +1,7 @@
 from django.urls import path
-from .views import VendorsAPIView, VendorProfileAPIView
+from vendors import views
 
 urlpatterns = [
-    path('', VendorsAPIView.as_view(), name="vendor"),
-    path('<vendor_id>/', VendorProfileAPIView.as_view(), name="vendor_profile"),
+    path('', views.VendorsAPIView.as_view(), name="vendor"),
+    path('<vendor_id>/', views.VendorProfileAPIView.as_view(), name="vendor_profile"),
 ]
