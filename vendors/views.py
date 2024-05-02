@@ -3,7 +3,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from .models import Vendor
-from .serializers import VendorSerializer, VendorProfileSerializer
+from .serializers import (VendorSerializer,
+                        VendorProfileSerializer,
+                        VendorUpdateSerializer)
 
 class VendorsAPIView(APIView):
 
@@ -32,7 +34,7 @@ class VendorProfileAPIView(APIView):
     # Update a vendor's details 
     def put(self, request, vendor_id):
         vendor = get_object_or_404(Vendor, vendor_code = vendor_id)
-        serializer = VendorSerializer(instance=vendor, data=request.data)
+        serializer = VendorUpdateSerializer(instance=vendor, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
