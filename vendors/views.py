@@ -4,8 +4,9 @@ from rest_framework import status
 from django.shortcuts import get_object_or_404
 from .models import Vendor
 from .serializers import (VendorSerializer,
-                        VendorProfileSerializer,
-                        VendorUpdateSerializer)
+                          VendorProfileSerializer,
+                          VendorUpdateSerializer,
+                          VendorPerformanceSerializer)
 
 class VendorsAPIView(APIView):
 
@@ -45,4 +46,9 @@ class VendorProfileAPIView(APIView):
         vendor = get_object_or_404(Vendor, vendor_code = vendor_id)
         vendor.delete()
         return Response({"message" : "Vendor deleted"}, status=status.HTTP_204_NO_CONTENT)     
-        
+
+class VendorPerformanceAPIView(APIView):
+    def get(self, request, vendor_id):
+        vendor = get_object_or_404(Vendor, vendor_code=vendor_id)
+        serializer = VendorPerformanceSerializer(vendor)
+        return Response(serializer.data)

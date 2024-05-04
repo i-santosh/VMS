@@ -16,3 +16,11 @@ class VendorUpdateSerializer(ModelSerializer):
     class Meta:
         model = Vendor
         fields = ["name","contact_details", "address"]
+
+class VendorPerformanceSerializer(ModelSerializer):
+    class Meta:
+        model = Vendor
+        fields = ["name", "on_time_delivery_rate", 
+                  "quality_rating_avg", 
+                  "average_response_time",
+                  "fulfillment_rate"]
