@@ -35,7 +35,8 @@ def calculate_quality_rating_average(vendor):
     )
 
     if completed_orders_count :
-        avg_quality_rating = round(completed_orders_count.aggregate(Avg('quality_rating'))['quality_rating__avg'], 2)
+        avg_quality_rating = round(completed_orders_count.aggregate(
+            Avg('quality_rating'))['quality_rating__avg'], 2)
         vendor.quality_rating_avg = avg_quality_rating
         vendor.save()
         return avg_quality_rating

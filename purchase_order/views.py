@@ -3,12 +3,14 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from .models import PurchaseOrder
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from .serializers import (PurchaseOrderSerializer, 
                           PurchaseOrderDetailSerializer, 
                           PurchaseOrderUpdateSerializer,
                           PurchaseOrderAcknowledgeSerializer)
 
 class PurchaseOrderAPIView(APIView):
+    permission_classes = [IsAuthenticated]
     # Create a purchase order
     def post(self, request):
         serializer = PurchaseOrderSerializer(data=request.data)
@@ -28,6 +30,7 @@ class PurchaseOrderAPIView(APIView):
         return Response(data=serializer.data,status=status.HTTP_200_OK)
 
 class PurchaseOrderDetailAPIView(APIView):
+    permission_classes = [IsAdminUser]
     # Retrieve details of a specific purchase order
     def get(self, request, po_id):
         purchase_orders = get_object_or_404(PurchaseOrder, po_number=po_id)
