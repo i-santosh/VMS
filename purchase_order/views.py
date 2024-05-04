@@ -21,8 +21,8 @@ class PurchaseOrderAPIView(APIView):
         purchase_orders = PurchaseOrder.objects.all()
         vendor_code = request.query_params.get('vendor_code')
         if vendor_code:
-            purchase_orders = (purchase_orders.filter
-                               (vendor__vendor_code__iexact=vendor_code))
+            purchase_orders = purchase_orders.filter(
+                                vendor__vendor_code__iexact=vendor_code)
         serializer = PurchaseOrderSerializer(purchase_orders, many=True)
         return Response(data=serializer.data,status=status.HTTP_200_OK)
 
