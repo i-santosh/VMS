@@ -16,3 +16,7 @@ class PurchaseOrderUpdateSerializer(ModelSerializer):
         model = PurchaseOrder
         fields = ["status", "quality_rating", "acknowledgment_date"]
         
+class PurchaseOrderAcknowledgeSerializer(ModelSerializer):
+    class Meta:
+        model = PurchaseOrder
+        fields = ["acknowledgment_date"]

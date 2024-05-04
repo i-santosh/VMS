@@ -5,7 +5,8 @@ from django.shortcuts import get_object_or_404
 from .models import PurchaseOrder
 from .serializers import (PurchaseOrderSerializer, 
                           PurchaseOrderDetailSerializer, 
-                          PurchaseOrderUpdateSerializer)
+                          PurchaseOrderUpdateSerializer,
+                          PurchaseOrderAcknowledgeSerializer)
 
 class PurchaseOrderAPIView(APIView):
     # Create a purchase order
@@ -49,3 +50,12 @@ class PurchaseOrderDetailAPIView(APIView):
         purchase_order.delete()
         return Response({"message" : "Vendor deleted"}, 
                         status=status.HTTP_204_NO_CONTENT)
+    
+class PurchaseOrderAcknowledgeAPIView(APIView):
+    def post(self, request, po_id):
+        purchase_order = get_object_or_404(PurchaseOrder, po_number=po_id)
+        serializer = PurchaseOrderAcknowledgeSerializer(purchase_order, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
