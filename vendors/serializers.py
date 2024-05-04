@@ -10,7 +10,7 @@ class VendorSerializer(ModelSerializer):
 class VendorProfileSerializer(ModelSerializer):
     class Meta:
         model = Vendor
-        exclude = ['id']
+        fields = '__all__'
 
 class VendorUpdateSerializer(ModelSerializer):
     class Meta:

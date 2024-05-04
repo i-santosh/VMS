@@ -3,4 +3,4 @@ from .models import PurchaseOrder
 
 @admin.register(PurchaseOrder)
 class PurchaseOrderAdmin(admin.ModelAdmin):
-    list_display = ["po_number", "vendor", "order_date", "delivery_date", "status"]
+    list_display = ["po_number", "vendor", "order_date", "delivery_date", "acknowledgment_date", "status"]

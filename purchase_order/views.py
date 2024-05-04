@@ -8,7 +8,6 @@ from .serializers import (PurchaseOrderSerializer,
                           PurchaseOrderUpdateSerializer)
 
 class PurchaseOrderAPIView(APIView):
-
     # Create a purchase order
     def post(self, request):
         serializer = PurchaseOrderSerializer(data=request.data)
@@ -22,12 +21,12 @@ class PurchaseOrderAPIView(APIView):
         purchase_orders = PurchaseOrder.objects.all()
         vendor_code = request.query_params.get('vendor_code')
         if vendor_code:
-            purchase_orders = purchase_orders.filter(vendor__vendor_code__iexact=vendor_code)
+            purchase_orders = (purchase_orders.filter
+                               (vendor__vendor_code__iexact=vendor_code))
         serializer = PurchaseOrderSerializer(purchase_orders, many=True)
         return Response(data=serializer.data,status=status.HTTP_200_OK)
 
 class PurchaseOrderDetailAPIView(APIView):
-
     # Retrieve details of a specific purchase order
     def get(self, request, po_id):
         purchase_orders = get_object_or_404(PurchaseOrder, po_number=po_id)
@@ -37,7 +36,8 @@ class PurchaseOrderDetailAPIView(APIView):
     # Update a purchase order
     def put(self, request, po_id):
         purchase_orders = get_object_or_404(PurchaseOrder, po_number=po_id)
-        serializer = PurchaseOrderUpdateSerializer(instance=purchase_orders, data=request.data)
+        serializer = PurchaseOrderUpdateSerializer(instance=purchase_orders, 
+                                                   data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -47,4 +47,5 @@ class PurchaseOrderDetailAPIView(APIView):
     def delete(self, request, po_id):
         purchase_order = get_object_or_404(PurchaseOrder, po_number=po_id)
         purchase_order.delete()
-        return Response({"message" : "Vendor deleted"}, status=status.HTTP_204_NO_CONTENT)
+        return Response({"message" : "Vendor deleted"}, 
+                        status=status.HTTP_204_NO_CONTENT)

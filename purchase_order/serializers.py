@@ -4,7 +4,7 @@ from .models import PurchaseOrder
 class PurchaseOrderSerializer(ModelSerializer):
     class Meta:
         model = PurchaseOrder
-        fields = ["po_number", "vendor", "order_date", "delivery_date", "status"]
+        fields = ["po_number", "vendor", "order_date", "delivery_date", "items", "quantity", "status", "issue_date", "acknowledgment_date"]
 
 class PurchaseOrderDetailSerializer(ModelSerializer):
     class Meta:

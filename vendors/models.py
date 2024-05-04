@@ -1,4 +1,3 @@
-import uuid
 from django.db import models
 
 class Vendor(models.Model):
@@ -12,4 +11,4 @@ class Vendor(models.Model):
     fulfillment_rate = models.FloatField(blank=True, default=0.0)
 
     def __str__(self):
-        return self.name
+        return self.vendor_code
