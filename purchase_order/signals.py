@@ -10,7 +10,7 @@ from django.core.exceptions import ObjectDoesNotExist
 @receiver(post_save, sender=PurchaseOrder)
 def update_performance_metrics(sender, instance, created, **kwargs) -> None:
     """
-    Signal for updating performance matrix in real-time.
+    Signal for updating performance metrics in real-time.
     """
     
     if not created and instance.status.lower() == "completed":
@@ -36,7 +36,7 @@ def update_performance_metrics(sender, instance, created, **kwargs) -> None:
         HistoricalPerformance.add_performance_record(
             vendor=vendor,
             on_time_delivery_rate=on_time_delivery_rate,
-            quality_rating_average=quality_rating_average,
+            quality_rating_avg=quality_rating_average,
             average_response_time=average_response_time,
             fulfillment_rate=fulfillment_rate
         )
