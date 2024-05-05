@@ -55,7 +55,7 @@ Start the server
 ## API Reference
 #### Get JWT Token to access protected routes:
 
-```http
+```python
   POST http://127.0.0.1:8000/api/auth/token/
 ```
 it will return access and refresh Token, save it any where
@@ -66,14 +66,14 @@ it will return access and refresh Token, save it any where
 
 #### Refresh JWT:
 
-```http
+```python
   POST http://127.0.0.1:8000/api/auth/token/refresh/
 ```
 Auth in Headers must contains `Bearer _your_refresh_token_`
 
 #### To create a new vendor :
 
-```http
+```python
   POST http://127.0.0.1:8000/api/vendors/
 ```
 
@@ -86,18 +86,18 @@ Auth in Headers must contains `Bearer _your_refresh_token_`
 
 #### Get List of vendors
 
-```http
+```python
   GET http://127.0.0.1:8000/api/vendors/
 ```
 
 #### Get Detail of specific vendor
 
-```http
+```python
   GET http://127.0.0.1:8000/api/vendors/{vendor_id}/
 ```
 #### Update Details of specific vendor
 
-```http
+```python
   PUT http://127.0.0.1:8000/api/vendors/{vendor_id}/
 ```
 | Payload | Type     |
@@ -108,18 +108,18 @@ Auth in Headers must contains `Bearer _your_refresh_token_`
 
 #### Delete specific vendor
 
-```http
+```python
   DELETE http://127.0.0.1:8000/api/vendors/{vendor_id}/
 ```
 #### Get performance metrics specific vendor
 
-```http
+```python
   GET http://127.0.0.1:8000/api/vendors/{vendor_id}/performance/
 ```
 
 #### Create Purchase Order 
 
-```http
+```python
   POST http://127.0.0.1:8000/api/purchase_orders/
 ```
 | Payload | Type     |
@@ -137,18 +137,18 @@ Auth in Headers must contains `Bearer _your_refresh_token_`
 
 #### Get List of purchase orders with filter by vendor option
 
-```http
+```python
   GET http://127.0.0.1:8000/api/purchase_orders/?vendor_code=_example_vendor_code
 ```
 
 #### Get Details of a specific Purchase Order
 
-```http
+```python
   GET http://127.0.0.1:8000/api/purchase_orders/{po_id}/
 ```
 #### Update a specific purchase order
 
-```http
+```python
   PUT http://127.0.0.1:8000/api/purchase_orders/{po_id}/
 ```
 
@@ -159,12 +159,12 @@ Auth in Headers must contains `Bearer _your_refresh_token_`
 
 #### Delete a specific purchase order
 
-```http
+```python
   DELETE http://127.0.0.1:8000/api/purchase_orders/{po_id}/
 ```
 #### Acknowledge a specific purchase order
 
-```http
+```python
   POST http://127.0.0.1:8000/api/purchase_orders/{po_id}/acknowledge/
 ```
 
