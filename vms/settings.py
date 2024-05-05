@@ -1,4 +1,10 @@
 from pathlib import Path
+# SECURE_SSL_REDIRECT = True
+# SECURE_HSTS_SECONDS = True
+# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
+# SECURE_HSTS_PRELOAD = True
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -8,7 +14,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-!s7gba^=nxz20^50*a!v3jq_tbtj(^7sxfv+scob!e-w)(1sa%'
+SECRET_KEY = '3924u92zE$@(*E(@NN#&@E@#EY4#$^%&7&@Q#$H(*XU#$*(UDCQIJiejfdiunIU#HDY#HRFYDHQR#YHFYQRH#YCioruf8h3q4#$H!s7gba^=nxz20^50*a!v3jq_tbtj(^7sxfv+scob!e-w)(1sa%'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -81,8 +87,6 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
-
-# AUTH_USER_MODEL = 'oauth.CustomUser'
 
 
 # Password validation

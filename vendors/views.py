@@ -10,14 +10,23 @@ from .serializers import (VendorSerializer,
                           VendorPerformanceSerializer)
 
 class VendorsAPIView(APIView):
-    # List all vendors 
+    """
+    API View for Vendor operations.
+    """
+
     def get(self, request):
+        """
+        Lists all vendors.
+        """
         all_vendors = Vendor.objects.all()
         serializer = VendorSerializer(all_vendors, many=True)
         return Response(serializer.data)
     
-    # Create a new vendor
+    
     def post(self, request):
+        """
+        Creates a new vendor with the provided data.
+        """
         serializer = VendorSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -25,16 +34,25 @@ class VendorsAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class VendorProfileAPIView(APIView):
+    """
+    API View for specific Vendor operations.
+    """
+
     permission_classes = [IsAuthenticated]
 
-    # Retrieve a specific vendor's details 
     def get(self, request, vendor_id):
+        """
+        Retrieves a specific vendor's details.
+        """
         vendor = get_object_or_404(Vendor, vendor_code=vendor_id)
         serializer = VendorProfileSerializer(vendor)
         return Response(serializer.data)
 
-    # Update a vendor's details 
+    
     def put(self, request, vendor_id):
+        """
+        Updates a vendor's details with the provided data.
+        """ 
         vendor = get_object_or_404(Vendor, vendor_code = vendor_id)
         serializer = VendorUpdateSerializer(instance=vendor, data=request.data)
         if serializer.is_valid():
@@ -42,14 +60,23 @@ class VendorProfileAPIView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    # Delete a vendor
+    
     def delete(self, request, vendor_id):
+        """
+        Deletes a specific vendor.
+        """
         vendor = get_object_or_404(Vendor, vendor_code = vendor_id)
         vendor.delete()
         return Response({"message" : "Vendor deleted"}, status=status.HTTP_204_NO_CONTENT)     
 
 class VendorPerformanceAPIView(APIView):
+    """
+    API View for retrieving a specific vendor's performance.
+    """ 
     def get(self, request, vendor_id):
+        """
+        Retrieves a specific vendor's performance.
+        """
         vendor = get_object_or_404(Vendor, vendor_code=vendor_id)
         serializer = VendorPerformanceSerializer(vendor)
         return Response(serializer.data)

@@ -1,6 +1,9 @@
 from django.db import models
 from vendors.models import Vendor
 
+"""
+Purchase Order Model
+"""
 class PurchaseOrder(models.Model):
     po_number = models.CharField(max_length=100, primary_key=True)
     vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)

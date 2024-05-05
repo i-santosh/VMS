@@ -4,8 +4,47 @@ from purchase_order.models import PurchaseOrder
 from vendors.models import Vendor, HistoricalPerformance
 from django.shortcuts import get_object_or_404
 from django.db.models import F, Avg
+from django.core.exceptions import ObjectDoesNotExist
+
+
+@receiver(post_save, sender=PurchaseOrder)
+def update_performance_metrics(sender, instance, created, **kwargs) -> None:
+    """
+    Signal for updating performance matrix in real-time.
+    """
+    
+    if not created and instance.status.lower() == "completed":
+        try:
+            vendor = Vendor.objects.get(vendor_code=instance.vendor.vendor_code)
+        except ObjectDoesNotExist:
+            return  # Vendor not found
+        
+        # Calculate metrics
+        on_time_delivery_rate = calculate_on_time_delivery_rate(vendor)
+        fulfillment_rate = calculate_fulfillment_rate(vendor)
+
+        if instance.quality_rating is not None:
+            quality_rating_average = calculate_quality_rating_average(vendor)
+            average_response_time = calculate_average_response_time(vendor)
+        else:
+            quality_rating_average = None
+            average_response_time = None
+
+        """
+        Add performance record to History
+        """
+        HistoricalPerformance.add_performance_record(
+            vendor=vendor,
+            on_time_delivery_rate=on_time_delivery_rate,
+            quality_rating_average=quality_rating_average,
+            average_response_time=average_response_time,
+            fulfillment_rate=fulfillment_rate
+        )
 
 def calculate_on_time_delivery_rate(vendor):
+    """
+    Calculate on time delivery rate of a specified vendor.
+    """
 
     total_completed_orders_count = PurchaseOrder.objects.filter(
         vendor__vendor_code=vendor.vendor_code, 
@@ -18,6 +57,7 @@ def calculate_on_time_delivery_rate(vendor):
         acknowledgment_date__lte = F('delivery_date')
     ).count()
 
+    # Calculating On Time delivery rate
     if total_completed_orders_count > 0:
         on_time_delivery_rate = round((on_time_completed_orders_count / 
                                        total_completed_orders_count * 100)
@@ -25,24 +65,32 @@ def calculate_on_time_delivery_rate(vendor):
         vendor.on_time_delivery_rate = on_time_delivery_rate
         vendor.save()
         return on_time_delivery_rate
+    return None
 
 def calculate_quality_rating_average(vendor):
-    
+    """
+    calculate quality rating average of a specified vendor
+    """
+
     completed_orders_count = PurchaseOrder.objects.filter(
         vendor__vendor_code=vendor.vendor_code, 
         status="completed",
         quality_rating__isnull=False
     )
-
-    if completed_orders_count :
+    
+    if completed_orders_count.exists() :
         avg_quality_rating = round(completed_orders_count.aggregate(
             Avg('quality_rating'))['quality_rating__avg'], 2)
         vendor.quality_rating_avg = avg_quality_rating
         vendor.save()
         return avg_quality_rating
+    return None
 
 def calculate_average_response_time(vendor):
-    
+    """
+    calculate average response time of a specified vendor.
+    """
+
     acknowledged_orders = PurchaseOrder.objects.filter(
         vendor__vendor_code=vendor.vendor_code, 
         status="completed",
@@ -51,24 +99,29 @@ def calculate_average_response_time(vendor):
     time_differences = acknowledged_orders.annotate(
         response_time=F('acknowledgment_date') - F('issue_date')
     )
+
     calc_average_response_time = time_differences.aggregate(
         avg_response_time=Avg('response_time'))['avg_response_time']
     avg_response_time_in_hours =  round((calc_average_response_time.total_seconds() / 3600), 2)
 
+    # Calculating average response time
     if calc_average_response_time :
         vendor.average_response_time = avg_response_time_in_hours 
         vendor.save()
         return avg_response_time_in_hours
+    return None
 
 def calculate_fulfillment_rate(vendor):
-    # Count the number of successfully fulfilled purchase orders
+    """
+    calculate fulfillment rate of a specified vendor.
+    """
+
     fulfilled_orders_count = PurchaseOrder.objects.filter(
         vendor=vendor.vendor_code,
         status='completed',
         quality_rating__isnull=False  # Assuming quality_rating being present indicates successful fulfillment
     ).count()
 
-    # Count the total number of purchase orders issued to the vendor
     total_orders_count = PurchaseOrder.objects.filter(
         vendor__vendor_code=vendor.vendor_code
     ).count()
@@ -79,32 +132,4 @@ def calculate_fulfillment_rate(vendor):
         vendor.fulfillment_rate = calc_fulfillment_rate 
         vendor.save()   
         return calc_fulfillment_rate
-
-
-@receiver(post_save, sender=PurchaseOrder)
-def update_perf_matrics(sender, instance, created, **kwargs) -> None:
-    order_status = instance.status.lower()
-    vendor = get_object_or_404(Vendor, vendor_code = instance.vendor.vendor_code)
-    
-    if not created and order_status == "completed":
-        # Calculate On-Time Delivery Rate
-        calc_on_time_delivery_rate = calculate_on_time_delivery_rate(vendor)
-
-        # Calculate Fulfillment Rate
-        calc_fulfillment_rate = calculate_fulfillment_rate(vendor)
-
-        calc_quality_rating_average = None
-        calc_average_response_time = None
-
-        if instance.quality_rating is not None:
-            # Calculate Quality Rating Average
-            calc_quality_rating_average = calculate_quality_rating_average(vendor)
-
-            # Calculate Average Response Time
-            calc_average_response_time = calculate_average_response_time(vendor)
-        
-        HistoricalPerformance.add_performance_record(vendor=vendor, 
-                                                     on_time_delivery_rate=calc_on_time_delivery_rate, 
-                                                     quality_rating_avg=calc_quality_rating_average,
-                                                     average_response_time=calc_average_response_time,
-                                                     fulfillment_rate=calc_fulfillment_rate)
+    return None
