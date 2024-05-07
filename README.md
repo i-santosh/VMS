@@ -133,7 +133,7 @@ Auth in Headers must contains `Bearer _your_refresh_token_`
 | `status` | `string` |
 | `issue_date` | `datetime` |
 
-- In `purchase_order` folder, there is a file name demoPOs.py that contains 10 random Purchase orders ,which can be used to create orders rapidly for test. `Consider checking vendor_code and jwt token in demoPOs.py`
+- In `purchase_order` folder, there is a file name demoPOs.py that contains 10 random Purchase orders ,which can be used to create orders rapidly for test. `Consider checking vendor_code in demoPOs.py`
 
 #### Get List of purchase orders with filter by vendor option
 
